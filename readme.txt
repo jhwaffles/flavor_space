@@ -1,1 +1,1 @@
-wtf is this
+this is a web app for fun
