@@ -13,20 +13,20 @@ st.write("""
 
 
 ##imports
-projection_df=pd.read_pickle("../data/projection_df.pkl")
+projection_df=pd.read_pickle("data/projection_df.pkl")
 if 'projection_df' not in st.session_state:
     st.session_state['projection_df']=projection_df
 
 
-cluster_groups=pd.read_pickle("../data/cluster_groups.pkl")
+cluster_groups=pd.read_pickle("data/cluster_groups.pkl")
 if 'cluster_groups' not in st.session_state:
     st.session_state['cluster_groups']=cluster_groups
 
-df=pd.read_pickle("../data/df_small.pkl")
+df=pd.read_pickle("data/df_small.pkl")
 if 'df_small.pkl' not in st.session_state:
     st.session_state['df_small.pkl']=df
 
-MODEL_FILES = {'cbow': '../data/flavor2vec-cbow.model'}
+MODEL_FILES = {'cbow': 'data/flavor2vec-cbow.model'}
 MODEL = 'cbow'
 
 model = gensim.models.doc2vec.Doc2Vec.load(MODEL_FILES[MODEL])
