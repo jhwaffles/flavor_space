@@ -9,20 +9,36 @@ import matplotlib.pyplot as plt
 projection_df=st.session_state["projection_df"]
 cluster_groups=st.session_state["cluster_groups"]
 
+st.set_page_config(layout="wide")
+st.markdown("""
+        <style>
+               .block-container {
+                    padding-top: 2rem;
+                    padding-bottom: 0rem;
+                    padding-left: 2rem;
+                    padding-right: 2rem;
+                }
+        </style>
+        """, unsafe_allow_html=True)
+
 #cluster browser portion
-st.header("Have user select a cluster. Look at Tables below")
+st.header("Cluster Browser")
+st.caption("Select clusters to explore recipe groupings as well as their taste profile via word clouds.")
+col1, col2 = st.columns([1,1])
+
+
 
 #st.table(cluster_groups)
 unique_clusters=sorted(projection_df["cluster"].unique())
-option = st.selectbox(
+option = col1.selectbox(
     'Select a Cluster',unique_clusters)
 
-limit_row_choices=[10,20,50,len(projection_df)]
-limit = st.selectbox('Limit Rows',limit_row_choices)
+limit_row_choices=[10,20,50]
+limit = col1.selectbox('Limit Rows',limit_row_choices)
 table_view=projection_df[projection_df["cluster"]==option][["cluster","food",'ingredient_count']].iloc[:limit,:]
 
 #view table.
-st.table(table_view)
+col1.dataframe(table_view)
 
 
 #word cloud
@@ -33,7 +49,8 @@ wordcloud = WordCloud().generate_from_frequencies(ab)
 fig, ax = plt.subplots()
 ax.imshow(wordcloud)
 ax.axis("off")
-st.pyplot(fig)
+col2.pyplot(fig)
+col2.caption("Cluster Flavor Profile")
 
 #word cloud tf-idf
 
@@ -66,4 +83,5 @@ wordcloud_tf_idf = WordCloud().generate_from_frequencies(ab)
 fig2, ax2 = plt.subplots()
 ax2.imshow(wordcloud_tf_idf)
 ax2.axis("off")
-st.pyplot(fig2)
+col2.pyplot(fig2)
+col2.caption("Distinctive Flavor Notes (TF-IDF)")

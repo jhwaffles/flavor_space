@@ -29,55 +29,60 @@ def id2index(df,lookup):
 def main():
     flav_model=st.session_state["model"]
     proj_df=st.session_state["projection_df"]
-    df=proj_df.copy()
+    df=st.session_state['df_small.pkl']
+
+
+    st.header("\"Computational Cooking\"")
+    st.caption("Input ingredients to the list. Most similar recipes via flavor profile will be displayed.")
+    col3, col4 = st.columns([1,1])
+
+    dfc=proj_df.copy()
     newrow = pd.DataFrame([["None","ingredient"]], columns=['food','type'])
-    df=pd.concat([df, newrow],ignore_index=True)
-    st.text(len(df))
+    dfc=pd.concat([dfc, newrow],ignore_index=True)
+    #st.text(len(df))
     #recipe_list = proj_df[proj_df['type'] == "recipe"]["food"].tolist()
-    ingr_list = df[df['type'] == "ingredient"]["food"].tolist()
+    ingr_list = dfc[dfc['type'] == "ingredient"]["food"].tolist()
     ingr_list = ["None"]+ingr_list
-    st.text("ingredients: {}".format(ingr_list))  
+    #st.text("ingredients: {}".format(ingr_list))  
     model_list={"Flavor Model":flav_model}
-    modelchoice = st.selectbox("Choose Model", list(model_list.keys()))
+    modelchoice = col3.selectbox("Choose Model", list(model_list.keys()))
 
     
     word2vec=model_list[modelchoice] 
     A=word2vec.dv.vectors.copy()
     zero_row = np.zeros([1,A.shape[1]])
     A = np.vstack([A, zero_row])  #use this as vectors with 0 row for "None"
-    st.text(A.shape)
-    #word2vec = load_model(models[model_key])
+    choices=col3.multiselect("Add ingredients", ingr_list, key='build')
 
-    choice1 = st.selectbox("Add Ingredient 1", ingr_list)
-    choice2 = st.selectbox("Add Ingredient 2", ingr_list)
-    choice3 = st.selectbox("Add Ingredient 3", ingr_list)
-
-    topn = 10
-    if choice1 and choice2 and choice3:
-        idx1=food2index(df[df["type"]=='ingredient'],choice1)
-        idx2=food2index(df[df["type"]=='ingredient'],choice2)
-        idx3=food2index(df[df["type"]=='ingredient'],choice3)
-
-        st.text(idx1)
-        st.text(idx2)
-        st.text(idx3)
-
-        similars = word2vec.dv.most_similar(positive=[A[idx1]+A[idx2]+A[idx3]])
+    #exclude=col3.multiselect("Substitute out", choices,key='substitute')
+#find indexes 
+    idx=[food2index(dfc[dfc["type"]=='ingredient'],i) for i in choices]
+    #st.text(idx)
+    try:
+        similars = word2vec.dv.most_similar(positive=np.sum([A[i] for i in idx],axis=0),topn=1000)
+        s_df = pd.DataFrame(similars, columns=['id','similarity']).astype({'id': 'string'})
+        s_df.reset_index()
+        option = st.selectbox('Search within:',('All','Ingredients Only', 'Recipes Only', ))
+        #select minimum # ingredients
+        if option!='Ingredients Only':
+            ingr_min = st.slider('Minimum # ingredients', 0, 8, 2)
+        #show top recipes.
+        top_n = 10 #10 as default
+        #st.write("Limit: ", top_n, ' rows')
+        s_df=s_df.merge(df, on='id', how='left')[['id','similarity','food','type','ingredient_count','flavorDB_ingredients']]
+        if option=='Ingredients Only':
+            s_df=s_df[s_df['type']=='ingredient']
+        elif option=='Recipes Only':
+            s_df=s_df[s_df['type']=='recipe']
+            s_df=s_df[s_df['ingredient_count']>=ingr_min]
+        else:
+            s_df=s_df[s_df['ingredient_count']>=ingr_min]
+        st.dataframe(s_df.iloc[:top_n,:],height = int(35.2*(5+1)))  #10 as default
+    except TypeError:
+        st.text("Input Ingredients")
     
-    s_df = pd.DataFrame(similars, columns=['id','similarity']).astype({'id': 'string'})
-    s_df.reset_index().merge(df, on='id', how='left')[['id','similarity','food']]
-
-
-    #st.dataframe(pd.DataFrame(s_df, columns=["id", "similarity"]))
-            
-    # st.subheader("If A-->B, then C-->?? Example: Man --> King, then Woman --> Queen")
-    # wordA = st.text_input("A")
-    # wordB = st.text_input("B")
-    # wordC = st.text_input("C")
-    # if wordA and wordB and wordC:
-    #     output = word2vec.most_similar_cosmul(positive=[wordB.lower(), wordC.lower()], negative=[wordA.lower()])
-    #     st.dataframe(pd.DataFrame(output, columns=["Word", "Score"]))
-        
+    #select ingredient or recipe or both
+    
     
 if __name__ == "__main__":
     main()
