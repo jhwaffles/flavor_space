@@ -17,9 +17,7 @@ st.markdown("""
                 }
         </style>
         """, unsafe_allow_html=True)
-st.write("""
-# Welcome to Moody Foody Flavor App
-""")
+st.header("Welcome to the Flavor Space app!")
 
 
 ##imports
