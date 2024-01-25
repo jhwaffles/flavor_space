@@ -9,21 +9,10 @@ import matplotlib.pyplot as plt
 projection_df=st.session_state["projection_df"]
 cluster_groups=st.session_state["cluster_groups"]
 
-st.set_page_config(layout="wide")
-st.markdown("""
-        <style>
-               .block-container {
-                    padding-top: 2rem;
-                    padding-bottom: 0rem;
-                    padding-left: 2rem;
-                    padding-right: 2rem;
-                }
-        </style>
-        """, unsafe_allow_html=True)
 
 #cluster browser portion
 st.header("Cluster Browser")
-st.caption("Select clusters to explore recipe groupings as well as their taste profile via word clouds.")
+st.caption("How to use:  Select a cluster from the drop down to explore recipe groupings. Examine the word clouds that display the taste profile of each cluster as well as distinctive flavors, which are extracted from molecular data from flavorDB. Use this in conjunction with the 'Visualize flavor space' tab to explore the flavor space.")
 col1, col2 = st.columns([1,1])
 
 

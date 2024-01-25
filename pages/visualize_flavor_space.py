@@ -4,8 +4,8 @@ import streamlit as st
 projection_df=st.session_state["projection_df"]
 cluster_groups=st.session_state["cluster_groups"]
 
-st.header("Visualize Flavor Space - 3D Cluster Browser")
-
+st.header("3D Cluster Browser")
+st.caption("How to use:  After loading, examine how recipes are grouped in the 'flavor space', a representation of recipe-molecule embeddings in 3D space. Notice the groupings, e.g. 'citrus-y' clusters, or 'cheesy' clusters. Use in conjunction with 'Cluster Browser' to examine what flavors the model is able to pick up. ")
 fig = px.scatter_3d(projection_df, 
                  x="x",
                  y="y",

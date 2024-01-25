@@ -18,6 +18,7 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 st.header("Welcome to the Flavor Space app!")
+st.caption("How to use: This application aims to make recipe recommendations to the user that will satisfy their cravings with an optional nutritional ranking. First, select an input recipe as a starting point. This could be anything like 'Orange BBQ Pork Ribs'. Next, select a desired dietary preference. The top 10 recipe alternatives with similar flavor profiles are listed, scored by nutritional content. For example, if 'ketogenic' is selected, recipes with a higher daily value % of protein will be listed first. ")
 
 
 ##imports

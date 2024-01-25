@@ -33,7 +33,7 @@ def main():
 
 
     st.header("\"Computational Cooking\"")
-    st.caption("Input ingredients to the list. Most similar recipes via flavor profile will be displayed.")
+    st.caption("How to use:  Add ingredients to the 'recipe'. The table will display top searches in similarity from the sum of input ingredient vectors. The output can be filtered by 'ingredient only' or 'recipe only' as well as the minimum number of ingredients. By choosing 'ingredients only' it may be possible to come up with ingredient substitutes. Example: select garlic and 'ingredients only' the top outputs would be redskin onion, shitake, cherry tomatos, all ingredients with a 'umami' commponent. Another example:  select honey, peanut, cheese and the top result is 'Sweet Heat Sriracha Peacns'.")
     col3, col4 = st.columns([1,1])
 
     dfc=proj_df.copy()
