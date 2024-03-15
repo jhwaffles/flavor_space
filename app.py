@@ -31,7 +31,7 @@ cluster_groups=pd.read_pickle("data/cluster_groups.pkl")
 if 'cluster_groups' not in st.session_state:
     st.session_state['cluster_groups']=cluster_groups
 
-df=pd.read_pickle("data/df_small_m.pkl")
+df=pd.read_pickle("data/df_small.pkl")
 if 'df_small.pkl' not in st.session_state:
     st.session_state['df_small.pkl']=df
 
