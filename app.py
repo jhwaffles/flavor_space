@@ -36,6 +36,9 @@ if 'df_small.pkl' not in st.session_state:
     st.session_state['df_small.pkl']=df
 
 MODEL_FILES = {'cbow-400': 'data/flavor2vec-cbow.model'}
+model = gensim.models.doc2vec.Doc2Vec.load(MODEL_FILES['cbow-400'])
+if 'model' not in st.session_state:
+    st.session_state['model']=model
 
 ##app
 #scoring system
@@ -159,10 +162,7 @@ def NtrColor(NtrOptimize_df):
     return color[2:]
 
 
-modelchoice = st.selectbox("Choose Model", list(MODEL_FILES.keys()))
-model = gensim.models.doc2vec.Doc2Vec.load(MODEL_FILES[modelchoice])
-if 'model' not in st.session_state:
-    st.session_state['model']=model
+
 
 recipe_list = projection_df[projection_df['type'] == "recipe" ]["food"].tolist()
 
