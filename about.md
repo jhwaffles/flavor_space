@@ -31,4 +31,4 @@ The two sets were joined using tokenized ingredients to create a recipe-molecule
 ### Additional Information:
 
 - For more details on how the model was trained and the approach, visit (https://github.com/jhwaffles/cse6242-team58-project).
-- The Flavor Space App is a project developed by Justin Huang. Connect with me on linked in (https://www.linkedin.com/in/justin-huang-6a10782b/).
+- The Flavor Space App is a project developed by Justin Huang. Connect with me on LinkedIn: (https://www.linkedin.com/in/justin-huang-6a10782b/).

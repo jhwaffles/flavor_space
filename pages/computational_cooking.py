@@ -31,7 +31,7 @@ def main():
     proj_df=st.session_state["projection_df"]
     df=st.session_state['df_small.pkl']
 
-
+    st.write(flav_model)
     st.header("\"Computational Cooking\"")
     st.caption("How to use:  Add ingredients to the 'recipe'. The table will display top searches in similarity from the sum of input ingredient vectors. The output can be filtered by 'ingredient only' or 'recipe only' as well as the minimum number of ingredients. By choosing 'ingredients only' it may be possible to come up with ingredient substitutes. Example: select garlic and 'ingredients only' the top outputs would be redskin onion, shitake, cherry tomatos, all ingredients with a 'umami' commponent. Another example:  select honey, peanut, cheese and the top result is 'Sweet Heat Sriracha Peacns'.")
     col3, col4 = st.columns([1,1])
@@ -44,11 +44,10 @@ def main():
     ingr_list = dfc[dfc['type'] == "ingredient"]["food"].tolist()
     ingr_list = ["None"]+ingr_list
     #st.text("ingredients: {}".format(ingr_list))  
-    model_list={"Flavor Model":flav_model}
-    modelchoice = col3.selectbox("Choose Model", list(model_list.keys()))
+   
 
     
-    word2vec=model_list[modelchoice] 
+    word2vec=flav_model
     A=word2vec.dv.vectors.copy()
     zero_row = np.zeros([1,A.shape[1]])
     A = np.vstack([A, zero_row])  #use this as vectors with 0 row for "None"
@@ -69,7 +68,7 @@ def main():
         #show top recipes.
         top_n = 10 #10 as default
         #st.write("Limit: ", top_n, ' rows')
-        s_df=s_df.merge(df, on='id', how='left')[['id','similarity','food','type','ingredient_count','flavorDB_ingredients']]
+        s_df=s_df.merge(df, on='id', how='left')[['id','similarity','food','type','ingredient_count']]
         if option=='Ingredients Only':
             s_df=s_df[s_df['type']=='ingredient']
         elif option=='Recipes Only':

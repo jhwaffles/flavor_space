@@ -31,17 +31,11 @@ cluster_groups=pd.read_pickle("data/cluster_groups.pkl")
 if 'cluster_groups' not in st.session_state:
     st.session_state['cluster_groups']=cluster_groups
 
-df=pd.read_pickle("data/df_small.pkl")
+df=pd.read_pickle("data/df_small_m.pkl")
 if 'df_small.pkl' not in st.session_state:
     st.session_state['df_small.pkl']=df
 
-MODEL_FILES = {'cbow': 'data/flavor2vec-cbow.model'}
-MODEL = 'cbow'
-
-model = gensim.models.doc2vec.Doc2Vec.load(MODEL_FILES[MODEL])
-if 'model' not in st.session_state:
-    st.session_state['model']=model
-
+MODEL_FILES = {'cbow-400': 'data/flavor2vec-cbow.model'}
 
 ##app
 #scoring system
@@ -164,6 +158,11 @@ def NtrColor(NtrOptimize_df):
         color.append(col)
     return color[2:]
 
+
+modelchoice = st.selectbox("Choose Model", list(MODEL_FILES.keys()))
+model = gensim.models.doc2vec.Doc2Vec.load(MODEL_FILES[modelchoice])
+if 'model' not in st.session_state:
+    st.session_state['model']=model
 
 recipe_list = projection_df[projection_df['type'] == "recipe" ]["food"].tolist()
 
