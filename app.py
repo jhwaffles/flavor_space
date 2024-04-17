@@ -18,8 +18,11 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 st.header("Welcome to the Flavor Space app!")
-st.caption("How to use: This application aims to make recipe recommendations to the user that will satisfy their cravings with an optional nutritional ranking. First, select an input recipe as a starting point. This could be anything like 'Orange BBQ Pork Ribs'. Next, select a desired dietary preference. The top 10 recipe alternatives with similar flavor profiles are listed, scored by nutritional content. For example, if 'ketogenic' is selected, recipes with a higher daily value % of protein will be listed first. ")
+st.caption("How to use: This application aims to make recipe recommendations to the user that will satisfy their cravings with an optional nutritional ranking. First, select an input recipe as a starting point. This could be anything like 'Orange BBQ Pork Ribs'. Next, select a desired dietary preference. The top 10 recipe alternatives with ***similar flavor profiles*** are listed, scored by nutritional content.")
 
+st.caption("For example, if 'ketogenic' is selected, recipes with a higher daily value % of protein and fat will be prioritized and listed first. Daily value (DV%) for each macronutrient is calculated from nutrition value per 100g of food divided by daily nutrition recommended value, per FDA recommendation.")
+
+st.caption("For more information on cluster browsing, follow the link to visualize flavor space on the side panel. For more details on the data and modeling, please follow the link to 'about'.")
 
 ##imports
 projection_df=pd.read_pickle("data/projection_df.pkl")
@@ -50,7 +53,7 @@ def Score(dict_TopRecipe_ntr, preference):
     elif preference == 'Ketogenic':
         parameter = [0,1,1,-1,-0.5,-1]
     elif preference == 'Low Fat':
-        parameter = [0,0,1,-1,-1,-1]
+        parameter = [0,-1,1,-1,-1,-1]
 
     dict_score = {}
     dict_energy = {}
@@ -108,7 +111,6 @@ def dataframe_with_selections(df):
 
 
 
-
 def NutritionOptimize(s_df, df, preference = 'Default'):    
     TopRecipe = df.loc[df['id'].isin(s_df['id'])]
     #TopRecipe=df['code2'].to_numpy()[df['code1'].to_numpy() == code].item()
@@ -135,8 +137,8 @@ def PlotNutritionDV(NtrOptimize_df):
                                               NtrOptimize_df['%DV-salt'].iloc[0],
                                               NtrOptimize_df['%DV-saturates'].iloc[0],
                                               NtrOptimize_df['%DV-sugars'].iloc[0]]})
-    ntr_plot.plot.bar(x='Nutrition', y='% Daily Value', title=NtrOptimize_df['food'].item(), rot=0, color=color)
-    
+    ntr_plot.plot.bar(x='Nutrition', y='% Daily Value', title=NtrOptimize_df['food'].item(), rot=0,
+                       color=color,figsize=(3,3),fontsize=8)
     #heper function
 def NtrColor(NtrOptimize_df):
     color = []
@@ -169,8 +171,11 @@ recipe_list = projection_df[projection_df['type'] == "recipe" ]["food"].tolist()
 preference_list=["Default","Ketogenic","Low Fat"]
 #ingr = st.slider('Minimum # Ingredients', 0,10,1)
 # & (projection_df['ingredient_count'] >=)
-choice = st.selectbox("Choose Starting Recipe", recipe_list)
-diet_choice = st.selectbox("Choose Dietary preference", preference_list)
+
+col1, col2 = st.columns([1,1])
+
+choice = col1.selectbox("Choose Starting Recipe", recipe_list)
+diet_choice = col1.selectbox("Choose Dietary preference", preference_list, help='Selecting different diet will change the coefficients that determine rankings. For example, the **default** diet will reward :green[protein] while penalizing :red[carbs, sugars, salts]. Selecting **Ketogenic** diet will reward :green[fats and proteins] and penalize :red[sugars, salts, and saturates]. Selecting **low fat** will penalize :red[fats, saturates, salts, and sugars].')
 
 
 idx1=food2index(df,choice)
