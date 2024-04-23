@@ -2,9 +2,9 @@
 import numpy as np
 import pandas as pd
 import streamlit as st
-import gensim
 import plotly.express as px
 import matplotlib.pyplot as plt
+import gensim
 
 st.set_page_config(layout="wide")
 st.markdown("""
